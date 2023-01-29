@@ -6,10 +6,10 @@ import pandas_datareader.data as web
 import datetime as dt
 from scipy.stats import norm
 
-def process_input(tickers, weights, years):
+def process_input(tickers, weights, weeks):
     yf.pdr_override()
 
-    start = dt.datetime(2022 - years, 1, 1)
+    start = dt.datetime(2015, 1, 1)
     end = dt.datetime.today()
     data = web.get_data_yahoo(tickers, start, end)['Close']
 
@@ -18,7 +18,7 @@ def process_input(tickers, weights, years):
 
     return tickers, weights, data
 
-def calculate_var(weights, data, years, initial_investment):
+def calculate_var(weights, data, weeks, initial_investment):
     returns = data.pct_change()
 
     avg_rets = returns.mean()
@@ -39,27 +39,29 @@ def calculate_var(weights, data, years, initial_investment):
 
     returns.tail()
 
-    conf_level1 = 0.1
+    conf_level1 = 0.05
 
     cutoff1 = norm.ppf(conf_level1, mean_investment, stdev_investment)
 
     var_1d1 = initial_investment - cutoff1
 
     var_array = []
-    num_days = int(365 * years)
+    num_days = int(7 * weeks)
     
+    print(num_days)
+
     for x in range(1, num_days+1):    
         var_array.append(np.round(var_1d1 * np.sqrt(x),2))
         print(str(x) + " day VaR @ 95% confidence: " + str(np.round(var_1d1 * np.sqrt(x),2)))
 
-    return var_1d1 * np.sqrt(num_days), var_array
+    return var_array
 
-def cvar(tickers, initial_investment, data, weights, years, alpha=0.95):
-    data = process_input(tickers, weights, years)
+def cvar(tickers, initial_investment, data, weights, weeks, alpha=0.95):
+    var = calculate_var(weights, data, weeks, initial_investment)
+    returns = data.fillna(0.0)
+    portfolio_returns = np.array(returns.iloc[-7 * weeks:].dot(weights))
 
-    var = calculate_var(tickers, weights, data, years, initial_investment)
-    returns = returns.fillna(0.0)
-    portfolio_returns = returns.iloc[-lookback_days:].dot(weights)
+    print(var)
     
     # Get back to a return rather than an absolute loss
     var_pct_loss = var / initial_investment
@@ -73,10 +75,13 @@ def plot_var(var_array, years):
     plt.plot(var_array, "r")
     plt.show()
 
+
 tickers = ['AAPL', 'MSFT', 'AMZN']
 weights = [0.35, 0.35, 0.3]
 
-tickers, weights, data = process_input(tickers, weights, 5)
+tickers, weights, data = process_input(tickers, weights, 50)
 
-print(cvar(tickers, 1000000, data, weights, 5))
+var_array = calculate_var(weights, data, 50, 100000)
+
+
 

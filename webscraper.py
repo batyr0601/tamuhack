@@ -20,7 +20,7 @@ class Scraper:
             for row in table:
                 index = 0
                 found = False
-                while not found and index < len(keywords):
+                while not found and index < len(self.keywords):
                     text = row.get_text().lower()
                     if (self.keywords[index] in text):
                         self.titles.append(text)
