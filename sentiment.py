@@ -49,7 +49,7 @@ def get_weights(tickers, quantities):
 def get_risk_factor(tickers, weights, totalInvestment, weeks):
     tickers, weights, data = risk.process_input(tickers, weights, weeks)
 
-    scraper = webscraper.Scraper
+    scraper = webscraper.Scraper('https://www.bls.gov/', [])
 
     sentiment = get_sentiment()
     m = metrics.get_from_last_month()
