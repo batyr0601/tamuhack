@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
 import ast
+from sentiment import get_weights, get_risk_factor
 
 app = Flask(__name__)
 api = Api(app)
@@ -33,12 +34,19 @@ class Users(Resource):
         data.to_csv('users.csv', index=False)
         return {'data': "glalglalglalga"}, 200  # return data with 200 OK
 
-    @app.route('/meow')
-    def get():
-        # data = pd.read_csv('users.csv')  # read CSV
-        data = data.to_dict()  # convert dataframe to dictionary
-        return {'data': "asl;kdfjasdf"}, 200  # return data and 200 OK code
-
+    @app.route('/getRiskFactor', methods=['POST'])
+    def postTickerData():
+        request_data = request.get_json()
+        ticker_list = []
+        quantity_list = []
+        for ticker in request_data:
+            ticker_list.append(ticker['ticker'])
+            quantity_list.append(ticker['amount'])
+        print(ticker_list)
+        print(quantity_list)
+        weights, total = get_weights(ticker_list, quantity_list)
+        
+        return {'riskFactor': get_risk_factor(ticker_list, weights, total, 3)}
     pass
 
     @app.route('/peepee/<name>')
@@ -59,6 +67,5 @@ api.add_resource(Locations, '/locations')  # and '/locations' is our entry point
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)  # run our Flask app
-    app.add_url_rule('GET', '/users', get)
 
 

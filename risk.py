@@ -40,7 +40,7 @@ def calculate_var(weights, data, weeks, initial_investment):
 
     returns.tail()
 
-    conf_level1 = 0.05
+    conf_level1 = 0.10
 
     cutoff1 = norm.ppf(conf_level1, mean_investment, stdev_investment)
 
