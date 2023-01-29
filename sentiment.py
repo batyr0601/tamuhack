@@ -44,7 +44,7 @@ def get_weights(tickers, quantities):
     for i in range(len(values)):
         weights.append(values[i]/total)
     
-    return weights
+    return weights, total
 
 def get_econ_data():
     scraper = webscraper.Scraper
