@@ -2,8 +2,7 @@ import requests
 from bs4 import BeautifulSoup 
 
 titles=[]
-keywords = ["economy", "gdp", "growth", "gain", "loss"]
-link = "https://seekingalpha.com/market-outlook?page="
+URL = 'https://www.bls.gov/'
 
 class Scraper:
     def __init__(self, keywords, link) -> None:
@@ -11,6 +10,7 @@ class Scraper:
         self.keywords = keywords
         self.link = link
     
+    # Method to return titles of articles discussing the economic state
     def getTitles(self, pages):
         for page in range(1, pages):
             r = requests.get(f"{self.link}{page}")
@@ -28,6 +28,19 @@ class Scraper:
                     index += 1
         return self.titles
 
-scraper = Scraper(keywords, link)
+    
+    # Method to return stats about the economic state of the US
+    def getEconStats():
+        response = requests.get(URL)
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-print(scraper.getTitles(10))
+        # Find the table containing the data
+        table = soup.find('div', {'id': 'latest-numbers'})
+        table = table.find_all('span', {'class': 'data'})
+
+        results = {}
+
+        for row in table:    
+            results[row.attrs['title']] = row.get_text()
+        
+        return results
