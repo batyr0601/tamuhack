@@ -23,7 +23,7 @@ def calculate_var(weights, data, weeks, initial_investment):
 
     avg_rets = returns.mean()
 
-    cov_matrix = returns.cov()
+    cov_matrix = returns.cov(returns)
 
     port_mean = avg_rets.dot(weights)
 
@@ -60,8 +60,6 @@ def cvar(tickers, initial_investment, data, weights, weeks, alpha=0.95):
     returns = data.fillna(0.0)
     portfolio_returns = np.array(returns.iloc[-7 * weeks:].dot(weights))
 
-    # print(var)
-    
     # Get back to a return rather than an absolute loss
     var_pct_loss = var / initial_investment
     
