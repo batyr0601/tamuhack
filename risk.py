@@ -24,7 +24,6 @@ def calculate_var(weights, data, weeks, initial_investment):
     avg_rets = returns.mean()
 
     cov_matrix = returns.cov()
-    cov_matrix
 
     port_mean = avg_rets.dot(weights)
 
