@@ -52,7 +52,7 @@ def get_risk_factor(tickers, weights, totalInvestment, weeks):
     scraper = webscraper.Scraper
 
     sentiment = get_sentiment()
-    metrics = metrics.get_from_last_month()
+    m = metrics.get_from_last_month()
     econStats = scraper.getEconStats()
 
     var_array = risk.calculate_var(weights, data, weeks, totalInvestment)
@@ -62,7 +62,7 @@ def get_risk_factor(tickers, weights, totalInvestment, weeks):
     # Input from API
     tickers = {}
 
-    riskFactor = var_array[-1]/totalInvestment * abs(metrics[0])/2.5 * metrics[1]/3.5 * 100/(100-metrics[2]+5) * (100+productivity)/100 + sentiment/100
+    riskFactor = var_array[-1]/totalInvestment * abs(m[0])/2.5 * m[1]/3.5 * 100/(100-m[2]+5) * (100+productivity)/100 + sentiment/100
     return riskFactor
 
 tickers = ['AAPL', 'MSFT', 'AMZN', 'GOOG', 'FB']
