@@ -31,9 +31,6 @@ def get_econ_data():
 
     return econStats, metrics
 
-tickers = ['AAPL', 'MSFT', 'AMZN']
-weights = [0.35, 0.35, 0.3]
-
 def get_risk_factor(tickers, weights, totalInvestment, weeks):
     tickers, weights, data = risk.process_input(tickers, weights, weeks)
 
