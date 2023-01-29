@@ -46,20 +46,13 @@ def get_weights(tickers, quantities):
     
     return weights, total
 
-def get_econ_data():
-    scraper = webscraper.Scraper
-    econStats = scraper.getEconStats()
-    metrics = metrics.get_from_last_month()
-
-    return econStats, metrics
-
 def get_risk_factor(tickers, weights, totalInvestment, weeks):
     tickers, weights, data = risk.process_input(tickers, weights, weeks)
 
     scraper = webscraper.Scraper
 
     sentiment = get_sentiment()
-    metrics = get_econ_data()
+    metrics = metrics.get_from_last_month()
     econStats = scraper.getEconStats()
 
     var_array = risk.calculate_var(weights, data, weeks, totalInvestment)
