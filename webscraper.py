@@ -2,23 +2,32 @@ import requests
 from bs4 import BeautifulSoup 
 
 titles=[]
-keywords = ["economy", "employment", "inflation"];
+keywords = ["economy", "gdp", "growth", "gain", "loss"]
+link = "https://seekingalpha.com/market-outlook?page="
 
-class scraper:
-
-    def getTitles(pages):
+class Scraper:
+    def __init__(self, keywords, link) -> None:
+        self.titles = []
+        self.keywords = keywords
+        self.link = link
+    
+    def getTitles(self, pages):
         for page in range(1, pages):
-            r = requests.get(f"https://seekingalpha.com/market-outlook?page={page}")
+            r = requests.get(f"{self.link}{page}")
+            
+            soup = BeautifulSoup(r.content, 'html5lib')
+            table = soup('a', attrs = {'class':'iX-r'}) 
+            for row in table:
+                index = 0
+                found = False
+                while not found and index < len(keywords):
+                    text = row.get_text().lower()
+                    if (self.keywords[index] in text):
+                        self.titles.append(text)
+                        found = True
+                    index += 1
+        return self.titles
 
-        soup = BeautifulSoup(r.content, 'html5lib')
-        table = soup('a', attrs = {'class':'iX-r'}) 
+scraper = Scraper(keywords, link)
 
-        for row in table:
-            index = 0
-            found = False
-            while not found and index < len(keywords):
-                if (keywords[index] in row.get_text().lower()):
-                    titles.append(row.get_text())
-                    found = True
-
-    print(getTitles(5))
+print(scraper.getTitles(10))
