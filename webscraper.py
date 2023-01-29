@@ -30,7 +30,7 @@ class Scraper:
 
     
     # Method to return stats about the economic state of the US
-    def getEconStats():
+    def getEconStats(self):
         response = requests.get(URL)
         soup = BeautifulSoup(response.text, 'html.parser')
 

@@ -48,11 +48,11 @@ def calculate_var(weights, data, weeks, initial_investment):
     var_array = []
     num_days = int(7 * weeks)
     
-    print(num_days)
+    # print(num_days)
 
     for x in range(1, num_days+1):    
         var_array.append(np.round(var_1d1 * np.sqrt(x),2))
-        print(str(x) + " day VaR @ 95% confidence: " + str(np.round(var_1d1 * np.sqrt(x),2)))
+        # print(str(x) + " day VaR @ 95% confidence: " + str(np.round(var_1d1 * np.sqrt(x),2)))
 
     return var_array
 
@@ -61,7 +61,7 @@ def cvar(tickers, initial_investment, data, weights, weeks, alpha=0.95):
     returns = data.fillna(0.0)
     portfolio_returns = np.array(returns.iloc[-7 * weeks:].dot(weights))
 
-    print(var)
+    # print(var)
     
     # Get back to a return rather than an absolute loss
     var_pct_loss = var / initial_investment
