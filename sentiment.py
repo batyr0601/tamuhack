@@ -59,7 +59,8 @@ def get_risk_factor(tickers, weights, totalInvestment, weeks):
     scraper = webscraper.Scraper
 
     sentiment = get_sentiment()
-    econStats, metrics = scraper.get_econ_data()
+    metrics = get_econ_data()
+    econStats = scraper.getEconStats()
 
     var_array = risk.calculate_var(weights, data, weeks, totalInvestment)
 
